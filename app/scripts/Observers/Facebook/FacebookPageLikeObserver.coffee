@@ -1,4 +1,4 @@
-class window.FacebookPageLikeObserver
+class @FacebookPageLikeObserver
 	getIntegrationPatterns: ->
 		[".PageLikeButton input[type=submit]"]
 
