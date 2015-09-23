@@ -25,7 +25,7 @@ import log from 'rose/log';
 import ExtractorEngine from 'rose/extractor-engine';
 import ExtractorCollection from 'rose/collections/extractors';
 // import SystemConfigs from 'rose/models/system-config';
-import Updater from 'rose/updater';
+import Updater from 'rose/promise-updater';
 
 import WindowTracker from 'rose/activity-trackers/window';
 

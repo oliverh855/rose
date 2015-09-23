@@ -54,15 +54,15 @@
     "install": "bower install && cd app/bower_components/forge && npm install && npm run minify"
   },
   "author": "Fraunhofer SIT",
-  "contributors": [
-    {
-      "name": "Felix Epp",
-      "email": "work@felixepp.de"
-    },
-    {
-      "name": "Oliver Hoffmann",
-      "email": "oliverh855@gmail.com"
-    }
-  ],
-  "license": "ISC"
+  "contributors": [{
+    "name": "Felix Epp",
+    "email": "work@felixepp.de"
+  }, {
+    "name": "Oliver Hoffmann",
+    "email": "oliverh855@gmail.com"
+  }],
+  "license": "ISC",
+  "standard": {
+    "globals": ["fetch", "Backbone"]
+  }
 }
