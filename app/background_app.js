@@ -26,6 +26,8 @@ import ExtractorEngine from 'rose/extractor-engine';
 import ExtractorCollection from 'rose/collections/extractors';
 // import SystemConfigs from 'rose/models/system-config';
 import Updater from 'rose/promise-updater';
+import { backboneFetch } from 'rose/utils/backbone-promises';
+import ConfigModel from 'rose/models/system-config';
 
 import WindowTracker from 'rose/activity-trackers/window';
 
@@ -50,8 +52,17 @@ import WindowTracker from 'rose/activity-trackers/window';
 
   WindowTracker.start();
 
+  const config = await backboneFetch(new ConfigModel())
+  const updateInterval = config.get('updateInterval')
 
-  // setTimeout(Updater.update,5000);
+  async function runUpdater (updateInterval) {
+    if (config.get('autoUpdateIsEnabled')) {
+      await Updater.update()
+    }
+    setTimeout(() => runUpdater(updateInterval), updateInterval)
+  }
+
+  runUpdater(updateInterval)
 })();
 
 kango.ui.browserButton.addEventListener(kango.ui.browserButton.event.COMMAND, function(event) {
