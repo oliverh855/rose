@@ -18,8 +18,38 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with ROSE.  If not, see <http://www.gnu.org/licenses/>.
  */
-var model = Backbone.Model.extend({
-  sync: Backbone.kangoforage.sync('Network')
-});
+import { Promise } from 'rsvp'
 
-export default model;
+import ExtractorCollection from '../collections/extractors'
+import ObserverCollection from '../collections/observers'
+import compareVersion from '../utils/compare-version'
+import { backboneFetch, backboneSave } from '../utils/backbone-promises'
+
+var model = Backbone.Model.extend({
+  sync: Backbone.kangoforage.sync('Network'),
+
+  updateExtractors (list) {
+    return this.updateCollection(new ExtractorCollection(), list)
+  },
+
+  updateObservers (list) {
+    return this.updateCollection(new ObserverCollection(), list)
+  },
+
+  updateCollection (collectionInstance, list) {
+    return backboneFetch(collectionInstance)
+      .then((collection) => this.updateByVersion(collection, list))
+  },
+
+  updateByVersion (collection, newCollection) {
+    return collection.reduce((sequence, model) => {
+      let remoteModel = _.findWhere(newCollection, {name: model.get('name'), network: model.get('network')})
+      if (remoteModel !== undefined && compareVersion(model.get('version'), remoteModel.version)) {
+        return sequence.then(() => backboneSave(model, remoteModel))
+      }
+      return Promise.resolve()
+    }, Promise.resolve())
+  }
+})
+
+export default model
